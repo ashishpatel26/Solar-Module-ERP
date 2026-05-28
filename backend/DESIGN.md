@@ -2,7 +2,7 @@
 
 ## Architecture
 
-The backend is a modular Express API with Prisma as the data access layer. It uses one PostgreSQL schema for core ERP records and keeps each visible frontend module behind a stable `/api/...` route group.
+The backend is a modular Express API with Prisma as the data access layer. It uses one MySQL schema for core ERP records and keeps each visible frontend module behind a stable `/api/...` route group.
 
 ## Module Boundaries
 

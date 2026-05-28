@@ -1060,6 +1060,16 @@ apiRoutes.use(
     createSchema: settingSchema,
     updateSchema: settingSchema.partial(),
     include: { company: true },
-    searchFields: ["key"]
+    searchFields: ["key"],
+    transformCreate: (data) => ({
+      ...data,
+      value: typeof data.value === "string" ? data.value : JSON.stringify(data.value)
+    }),
+    transformUpdate: (data) => ({
+      ...data,
+      ...(Object.prototype.hasOwnProperty.call(data, "value")
+        ? { value: typeof data.value === "string" ? data.value : JSON.stringify(data.value) }
+        : {})
+    })
   })
 );

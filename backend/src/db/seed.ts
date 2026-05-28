@@ -958,20 +958,20 @@ async function main() {
   await prisma.setting.upsert({
     where: { companyId_key: { companyId: company.id, key: "company.profile" } },
     update: {
-      value: {
+      value: JSON.stringify({
         name: company.name,
         timezone: "Asia/Kolkata",
         currency: "INR"
-      }
+      })
     },
     create: {
       companyId: company.id,
       key: "company.profile",
-      value: {
+      value: JSON.stringify({
         name: company.name,
         timezone: "Asia/Kolkata",
         currency: "INR"
-      }
+      })
     }
   });
 

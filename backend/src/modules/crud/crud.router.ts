@@ -66,7 +66,7 @@ const auditMutation = async (
       action,
       entityType,
       entityId: typeof entity === "object" && entity && "id" in entity ? String(entity.id) : undefined,
-      after: entity ? JSON.parse(JSON.stringify(entity)) : undefined
+      after: entity ? JSON.stringify(entity) : undefined
     }
   });
 };

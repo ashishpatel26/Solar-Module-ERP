@@ -7,27 +7,57 @@ This backend is designed around the modules already present in `index.html`.
 - Node.js + TypeScript
 - Express API
 - Prisma ORM
-- PostgreSQL database
+- MySQL database
 - JWT authentication with MFA-ready login flow
 - Zod request validation
 
 ## Setup
 
+### Existing Local MySQL
+
+Use this if MySQL is already installed through MySQL Server, XAMPP, WAMP, Laragon, or another local stack.
+
+1. Create a database:
+
+```powershell
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS solaros_erp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+```
+
+2. Configure and run the backend:
+
+```powershell
+cd backend
+Copy-Item .env.example .env
+npm install
+npm run prisma:generate
+npm run prisma:migrate -- --name init
+npm run seed
+npm run dev
+```
+
+Default `.env.example` assumes:
+
+```text
+DATABASE_URL="mysql://root:mysql@localhost:3306/solaros_erp"
+```
+
+If your MySQL root password is different, edit `.env` before running Prisma.
+
 ### No Docker or Podman: SQLite Dev Mode
 
-This is the lightest option for slow internet. It creates a local database file at `backend/prisma/dev.db`.
+This is the lightest option for slow internet. It creates a local database file at `backend/prisma/solaros-local.db`.
 
 ```powershell
 cd backend
 Copy-Item .env.sqlite.example .env
 npm install
 npm run prisma:generate:sqlite
-npm run prisma:migrate:sqlite -- --name init
+npm run sqlite:create
 npm run seed
 npm run dev
 ```
 
-Use this mode for development and frontend integration. Use PostgreSQL before production.
+Use this mode for development and frontend integration. Use MySQL before production.
 
 ### With Podman
 
@@ -37,7 +67,7 @@ On Windows, start your Podman machine first if needed:
 podman machine start
 ```
 
-Then run PostgreSQL with compose:
+Then run MySQL with compose:
 
 ```powershell
 cd backend
@@ -53,14 +83,15 @@ npm run dev
 If your Podman install does not include `podman compose`, use a direct container command:
 
 ```powershell
-podman volume create solaros_erp_pgdata
-podman run -d --name solaros-erp-postgres `
-  -e POSTGRES_USER=postgres `
-  -e POSTGRES_PASSWORD=postgres `
-  -e POSTGRES_DB=solaros_erp `
-  -p 5432:5432 `
-  -v solaros_erp_pgdata:/var/lib/postgresql/data `
-  postgres:16-alpine
+podman volume create solaros_erp_mysql_data
+podman run -d --name solaros-erp-mysql `
+  -e MYSQL_ROOT_PASSWORD=mysql `
+  -e MYSQL_DATABASE=solaros_erp `
+  -e MYSQL_USER=solaros `
+  -e MYSQL_PASSWORD=solaros `
+  -p 3306:3306 `
+  -v solaros_erp_mysql_data:/var/lib/mysql `
+  mysql:8.4
 ```
 
 Then continue:

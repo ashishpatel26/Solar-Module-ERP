@@ -1,20 +1,21 @@
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: solaros-erp-postgres
+  mysql:
+    image: mysql:8.4
+    container_name: solaros-erp-mysql
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: solaros_erp
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: solaros_erp
+      MYSQL_USER: solaros
+      MYSQL_PASSWORD: solaros
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - solaros_erp_pgdata:/var/lib/postgresql/data
+      - solaros_erp_mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d solaros_erp"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -pmysql --silent"]
       interval: 5s
       timeout: 3s
-      retries: 20
+      retries: 30
 
 volumes:
-  solaros_erp_pgdata:
+  solaros_erp_mysql_data:
